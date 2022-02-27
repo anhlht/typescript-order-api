@@ -41,13 +41,15 @@ class App {
     }
 
     private mongoSetup(): void {
-        if (process.env.NODE_ENV !== 'prod') {
-            mongoose.connect(this.mongoUrl)
-        } else {
+        if (process.env.NODE_ENV === 'prod') {
             mongoose.connect(this.mongoUrl, {
                 user: this.mongoUser,
                 pass: this.mongoPass
             })
+        } else if(process.env.NODE_ENV === 'test-ci') {
+            mongoose.connect('mongodb+srv://anhlht:WYTvYnXdC6OfkqQ+@cluster0.ykidk.mongodb.net/order-api-test?retryWrites=true&w=majority')
+        } else {
+            mongoose.connect(this.mongoUrl)
         }
     }
 }

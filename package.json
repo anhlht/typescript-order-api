@@ -10,6 +10,7 @@
     "lint:fix": "tslint --fix ./src/**/*.ts ./test/**/*.spec.ts -t verbose",
     "pretest": "cross-env NODE_ENV=test npm run build && npm run lint",
     "test": "cross-env NODE_ENV=test mocha --reporter spec --require ./node_modules/ts-node/register test/**/*.spec.ts ",
+    "test:ci": "cross-env NODE_ENV=test-ci mocha --reporter spec --require ./node_modules/ts-node/register test/**/*.spec.ts ",
     "test:mutation": "stryker run",
     "stryker:init": "stryker init",
     "dev": "cross-env PORT=3000 NODE_ENV=dev ts-node ./src/server.ts",
