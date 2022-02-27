@@ -1,21 +1,30 @@
 import * as bodyParser from 'body-parser'
 import express = require('express');
 import mongoose = require("mongoose")
-import { APIRoute } from '../src/routes/api'
-import { OrderRoute } from '../src/routes/order'
-import { UserRoute } from '../src/routes/user'
-import * as errorHandler from '../src/utility/errorHandler'
+import { APIRoute } from './routes/api'
+import { OrderRoute } from './routes/order'
+import { UserRoute } from './routes/user'
+import * as errorHandler from './utility/errorHandler'
 import * as expressWinston from 'express-winston'
 import * as winston from 'winston'
+import * as dotenv from 'dotenv'
 
 class App {
     public app: express.Application
     public userRoutes: UserRoute = new UserRoute()
     public apiRoutes: APIRoute = new APIRoute()
     public orderRoutes: OrderRoute = new OrderRoute()
-    public mongoUrl: string = 'mongodb://localhost/order-api'
+    public mongoUrl: string
+    public mongoUser: string
+    public mongoPass: string
 
     constructor() {
+        const path = `${__dirname}/../.env.${process.env.NODE_ENV}`
+        dotenv.config({ path: path })
+        this.mongoUrl = `mongodb://${process.env.MONGODB_URL_PORT}/${process.env.MONGODB_DATABASE}`
+        this.mongoUser = `${process.env.MONGODB_USER}`
+        this.mongoPass = `${process.env.MONGODB_PASS}`
+
         this.app = express()
         this.app.use(bodyParser.json())
         this.userRoutes.routes(this.app)
@@ -32,7 +41,14 @@ class App {
     }
 
     private mongoSetup(): void {
-        mongoose.connect("mongodb://localhost:27017/order-api")
+        if (process.env.NODE_ENV !== 'prod') {
+            mongoose.connect(this.mongoUrl)
+        } else {
+            mongoose.connect(this.mongoUrl, {
+                user: this.mongoUser,
+                pass: this.mongoPass
+            })
+        }
     }
 }
 
