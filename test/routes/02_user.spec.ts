@@ -4,6 +4,7 @@ import 'mocha'
 import app from '../../src/app'
 import User from '../../src/models/user'
 import { OrderModel } from '../../src/schemas/order'
+import { UserModel } from '../../src/schemas/user'
 
 chai.use(chaiHttp)
 
@@ -21,10 +22,12 @@ const user: User = {
 
 let token: string
 
-
 before(async () => {
     expect(OrderModel.modelName).to.be.equal('Order')
-    // OrderModel.collection.drop()
+    await OrderModel.db.dropCollection('orders')
+
+    expect(UserModel.modelName).to.be.equal('User')
+    await UserModel.db.dropCollection('users')
 })
 
 describe('userRoute', () => {
