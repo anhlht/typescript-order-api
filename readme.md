@@ -4,4 +4,5 @@ npm install -D @types/body-parser @types/chai @types/chai-http @types/express @t
 npm install body-parser express chai-http mongoose lodash bcrypt passport passport-jwt jsonwebtoken passport-local mongoose-unique-validator winston express-winston
 
 openssl req -newkey rsa:2048 -nodes -keyout keytemp.pem -x509 -days 365 -out cert.pem
+
 openssl rsa -in keytemp.pem -out key.pem
